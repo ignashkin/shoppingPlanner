@@ -7,4 +7,5 @@ import com.egor.shoppingPlanner.domain.Product;
 @Repository
 public interface ProductRepository extends CrudRepository<Product, Long> {
     Product findById(long id);
+    Product getByName(String name);
 }

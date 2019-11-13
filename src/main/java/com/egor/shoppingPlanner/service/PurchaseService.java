@@ -16,10 +16,10 @@ public class PurchaseService {
     @Autowired
     PurchaseRepository purchaseRepository;
 
-    void savePurchase(Purchase purchase) {
+    public   void savePurchase(Purchase purchase) {
         purchaseRepository.save(purchase);
     }
-    Purchase createPurchase(Product product) {
+    public Purchase createPurchase(Product product) {
         Purchase purchase = new Purchase();
         purchase.setProduct(product);
         savePurchase(purchase);
