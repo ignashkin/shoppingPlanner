@@ -27,12 +27,11 @@ public class PurchaseListService {
         if (purchaseList == null) {
             purchaseList = new PurchaseList(date);
             purchaseList.setPurchases(new HashSet<Purchase>());
-            savePurchaseList(purchaseList);
         }
         return purchaseList;
     }
 
-    public void planPurchaseList(LocalDate date) {
+    public PurchaseList planPurchaseList(LocalDate date) {
         ArrayList<Product> products = new ArrayList<Product>();
         Set<Purchase> purchases = new HashSet<Purchase>();
         products = productService.productsEnding(date);
@@ -41,15 +40,13 @@ public class PurchaseListService {
             purchases.add(new Purchase(product,purchaseList));
         }
         purchaseList.setPurchases(purchases);
-        savePurchaseList(purchaseList);
+        return purchaseList;
     }
 
     public void savePurchaseList(PurchaseList purchaseList) {
-        purchaseList.calculateCost();
+        purchaseListRepository.save(purchaseList);
         for (Purchase purchase : purchaseList.getPurchases()) {
             purchaseRepository.save(purchase);
         }
-        purchaseListRepository.save(purchaseList);
     }
-
 }

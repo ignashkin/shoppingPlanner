@@ -46,6 +46,7 @@ public class ShoppingPlannerSrv {
         System.out.println(purchaseService.createPurchase(product2).toString());
         System.out.println(purchaseService.createPurchase(product3).toString());
         */
+        purchaseListService.savePurchaseList(purchaseList);
         System.out.print(purchaseList.toString());
     }
 }
