@@ -1,5 +1,6 @@
 package com.egor.shoppingPlanner.service;
 
+import com.egor.shoppingPlanner.domain.PurchaseList;
 import org.springframework.stereotype.Service;
 import com.egor.shoppingPlanner.domain.Product;
 import com.egor.shoppingPlanner.domain.Purchase;
@@ -15,14 +16,23 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public class PurchaseService {
     @Autowired
     PurchaseRepository purchaseRepository;
+    @Autowired
+    PurchaseListService purchaseListService;
 
-    public   void savePurchase(Purchase purchase) {
+    public void savePurchase(Purchase purchase) {
         purchaseRepository.save(purchase);
     }
     public Purchase createPurchase(Product product) {
+        LocalDate date = LocalDate.now();
         Purchase purchase = new Purchase();
+        purchase.setDate(date);
         purchase.setProduct(product);
+        PurchaseList purchaseList = purchaseListService.getPurchaseList(date);
+       // purchase.setPurchaseList(purchaseList);
         savePurchase(purchase);
+        purchaseList.addPurchase(purchase);
+        purchaseListService.savePurchaseList(purchaseList);
+
         return purchase;
     }
 

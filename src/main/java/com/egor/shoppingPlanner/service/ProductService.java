@@ -25,10 +25,10 @@ public class ProductService {
     return products;
     }
 
-    public void addProduct(String name) {
+    public Product addProduct(String name) {
         Product product = new Product(name);
         productRepository.save(product);
-
+        return product;
     }
     void calculatePrice(Product product) {
         Purchase purchase = purchaseService.getLastPurchase(product);

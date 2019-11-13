@@ -13,6 +13,14 @@ public class PurchaseList {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "product") // mappedBy ???
     private Set<Purchase> purchases;
 
+    protected  PurchaseList() {
+
+    }
+
+    public PurchaseList(LocalDate date) {
+        this.date = date;
+    }
+
     public long getId() {
         return id;
     }
@@ -37,5 +45,9 @@ public class PurchaseList {
 
     public void setPurchases(Set<Purchase> purchases) {
         this.purchases = purchases;
+    }
+
+    public void addPurchase(Purchase purchase) {
+        this.purchases.add(purchase);
     }
 }
