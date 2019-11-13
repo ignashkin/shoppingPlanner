@@ -38,9 +38,11 @@ public class ShoppingPlannerSrv {
         Product product2 = productService.addProduct("test2");
         Product product3 = productService.addProduct("test3");
         PurchaseList purchaseList = purchaseListService.getPurchaseList(LocalDate.now());
-        Purchase purchase = new Purchase(product1, purchaseList);
-        purchaseList.addPurchase(purchase);
-        purchase.setCost(10.5f);
+        Purchase purchase1 = new Purchase(product1, purchaseList);
+        Purchase purchase2 = new Purchase(product1,purchaseList);
+        purchaseList.addPurchase(purchase1);
+        purchaseList.addPurchase(purchase2);
+        purchase1.setCost(10.5f);
         /*
         System.out.println(purchaseService.createPurchase(product1).toString());
         System.out.println(purchaseService.createPurchase(product2).toString());
