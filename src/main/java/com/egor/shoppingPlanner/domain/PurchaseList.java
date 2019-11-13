@@ -8,9 +8,10 @@ import java.util.Set;
 public class PurchaseList {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    long id;
-    LocalDate date;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "product") // mappedBy ???
+    private long id;
+    private LocalDate date;
+    private float cost;
+    @OneToMany(fetch = FetchType.EAGER,  cascade = CascadeType.ALL, mappedBy = "purchaseList") // mappedBy ???
     private Set<Purchase> purchases;
 
     protected  PurchaseList() {
@@ -49,5 +50,32 @@ public class PurchaseList {
 
     public void addPurchase(Purchase purchase) {
         this.purchases.add(purchase);
+        calculateCost();
+    }
+
+    public float getCost() {
+        return cost;
+    }
+
+    public void setCost(float cost) {
+        this.cost = cost;
+    }
+
+    public float calculateCost () {
+        float cost = this.cost;
+        for (Purchase purchase : this.purchases) {
+            this.cost = this.cost + purchase.getCost();
+        }
+        return cost;
+    }
+
+    @Override
+    public String toString() {
+        String purchaseList = "id: " + Long.toString(this.id) + "  date: " + this.date.toString() +"\n";
+        for (Purchase purchase :this.purchases) {
+            purchaseList = purchaseList + purchase.toString() + "\n";
+        }
+        purchaseList = purchaseList + "Cost: " + Float.toString(this.cost) + "\n";
+        return purchaseList;
     }
 }

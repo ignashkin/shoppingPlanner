@@ -10,7 +10,7 @@ public class Purchase {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private  long id;
     private float cost;
-    private float value;
+    private float value = 1;
     private String shop;
     private LocalDate date;
     private  long ttl;
@@ -18,21 +18,30 @@ public class Purchase {
     @JoinColumn(name = "product_id")
     private Product product;
 
-   // @ManyToOne(fetch = FetchType.EAGER)
+   @ManyToOne(fetch = FetchType.EAGER)
     //@JoinColumn(name = "purchaseList_id")
-    //private PurchaseList purchaseList;
+    private PurchaseList purchaseList;
+
+   protected Purchase() {}
+
+   public Purchase (Product product, PurchaseList purchaseList){
+       this.product = product;
+       this.purchaseList = purchaseList;
+   }
+
+
 
     public long getId() {
         return id;
     }
 
-   // public PurchaseList getPurchaseList() {
-     //   return purchaseList;
-   // }
+    public PurchaseList getPurchaseList() {
+        return purchaseList;
+    }
 
-    //public void setPurchaseList(PurchaseList purchaseList) {
-      //  this.purchaseList = purchaseList;
-    //}
+    public void setPurchaseList(PurchaseList purchaseList) {
+        this.purchaseList = purchaseList;
+    }
 
     public void setId(long id) {
         this.id = id;
@@ -44,6 +53,7 @@ public class Purchase {
 
     public void setCost(float cost) {
         this.cost = cost;
+        this.purchaseList.calculateCost();
     }
 
     public float getValue() {
@@ -84,5 +94,11 @@ public class Purchase {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    @Override
+    public String toString() {
+        String purchase = "Product: " + this.product + "  value: " + Float.toString(this.value) + "  cost: "+ Float.toString(this.cost);
+        return purchase;
     }
 }

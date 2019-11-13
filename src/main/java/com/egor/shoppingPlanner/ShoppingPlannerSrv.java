@@ -2,6 +2,7 @@ package com.egor.shoppingPlanner;
 
 import com.egor.shoppingPlanner.domain.Product;
 import com.egor.shoppingPlanner.domain.Purchase;
+import com.egor.shoppingPlanner.domain.PurchaseList;
 import com.egor.shoppingPlanner.repo.ProductRepository;
 import com.egor.shoppingPlanner.repo.PurchaseRepository;
 import com.egor.shoppingPlanner.service.PurchaseListService;
@@ -31,13 +32,20 @@ public class ShoppingPlannerSrv {
         ProductService productService = context.getBean(ProductService.class);
         PurchaseService purchaseService = context.getBean(PurchaseService.class);
         //ProductRepository productRepository = context.getBean(ProductRepository.class);
-        //PurchaseListService purchaseListService =context.getBean(PurchaseListService.class);
+        PurchaseListService purchaseListService =context.getBean(PurchaseListService.class);
 
         Product product1 = productService.addProduct("test1");
         Product product2 = productService.addProduct("test2");
         Product product3 = productService.addProduct("test3");
-        purchaseService.createPurchase(product1);
-        purchaseService.createPurchase(product2);
-        purchaseService.createPurchase(product3);
+        PurchaseList purchaseList = purchaseListService.getPurchaseList(LocalDate.now());
+        Purchase purchase = new Purchase(product1, purchaseList);
+        purchaseList.addPurchase(purchase);
+        purchase.setCost(10.5f);
+        /*
+        System.out.println(purchaseService.createPurchase(product1).toString());
+        System.out.println(purchaseService.createPurchase(product2).toString());
+        System.out.println(purchaseService.createPurchase(product3).toString());
+        */
+        System.out.print(purchaseList.toString());
     }
 }

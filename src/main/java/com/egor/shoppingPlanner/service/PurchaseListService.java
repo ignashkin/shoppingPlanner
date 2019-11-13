@@ -1,5 +1,6 @@
 package com.egor.shoppingPlanner.service;
 
+import com.egor.shoppingPlanner.repo.PurchaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.egor.shoppingPlanner.domain.Product;
 import com.egor.shoppingPlanner.domain.Purchase;
@@ -17,7 +18,7 @@ public class PurchaseListService {
     @Autowired
     PurchaseListRepository purchaseListRepository;
     @Autowired
-    PurchaseService purchaseService;
+    PurchaseRepository purchaseRepository;
     @Autowired
     ProductService productService;
 
@@ -26,6 +27,7 @@ public class PurchaseListService {
         if (purchaseList == null) {
             purchaseList = new PurchaseList(date);
             purchaseList.setPurchases(new HashSet<Purchase>());
+            savePurchaseList(purchaseList);
         }
         return purchaseList;
     }
@@ -34,15 +36,20 @@ public class PurchaseListService {
         ArrayList<Product> products = new ArrayList<Product>();
         Set<Purchase> purchases = new HashSet<Purchase>();
         products = productService.productsEnding(date);
+        PurchaseList purchaseList = getPurchaseList(date);
         for (Product product : products) {
-            purchases.add(purchaseService.createPurchase(product));
+            purchases.add(new Purchase(product,purchaseList));
         }
-        PurchaseList purchaseList = new PurchaseList(date);
         purchaseList.setPurchases(purchases);
         savePurchaseList(purchaseList);
     }
 
     public void savePurchaseList(PurchaseList purchaseList) {
+        purchaseList.calculateCost();
+        for (Purchase purchase : purchaseList.getPurchases()) {
+            purchaseRepository.save(purchase);
+        }
         purchaseListRepository.save(purchaseList);
     }
+
 }

@@ -19,26 +19,9 @@ public class PurchaseService {
     @Autowired
     PurchaseListService purchaseListService;
 
-    public void savePurchase(Purchase purchase) {
-        purchaseRepository.save(purchase);
-    }
-    public Purchase createPurchase(Product product) {
-        LocalDate date = LocalDate.now();
-        Purchase purchase = new Purchase();
-        purchase.setDate(date);
-        purchase.setProduct(product);
-        PurchaseList purchaseList = purchaseListService.getPurchaseList(date);
-       // purchase.setPurchaseList(purchaseList);
-        savePurchase(purchase);
-        purchaseList.addPurchase(purchase);
-        purchaseListService.savePurchaseList(purchaseList);
-
-        return purchase;
-    }
-
     Purchase getLastPurchase(Product product) {
         ArrayList<Purchase> purchases =(ArrayList<Purchase>) purchaseRepository.findByProductOrderByDate(product);
-        LocalDate lastDate = LocalDate.of(2019,11,12);
+        LocalDate lastDate = LocalDate.of(2000,11,12);
         if (purchases != null) {
             for (Purchase purchase : purchases) {
                 if (purchase.getDate().isAfter(lastDate)) {
@@ -66,7 +49,6 @@ public class PurchaseService {
         Purchase lastPurchase = getLastPurchase(product);
         float purchaseValue = lastPurchase.getValue();
         lastPurchase.setTtl((long) Math.ceil(period/purchaseValue));
-        savePurchase(lastPurchase);
         return lastPurchase.getTtl();
     }
 }

@@ -52,4 +52,9 @@ public class Product {
     public void setProductTypes(Set<ProductType> productTypes) {
         this.productTypes = productTypes;
     }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }
