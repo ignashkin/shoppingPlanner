@@ -33,7 +33,7 @@ public class ShoppingPlannerSrv {
 
         Product product1 = productService.addProduct("test1");
         Product product2 = productService.addProduct("test2");
-        PurchaseList purchaseList1 = purchaseListService.getPurchaseList(LocalDate.of(2019, 10,1));
+        PurchaseList purchaseList1 = purchaseListService.getPurchaseList(LocalDate.of(2019, 10,11));
         Purchase purchase11 = productService.createPurchase(product1, purchaseList1);
         purchaseList1.addPurchase(purchase11);
         purchaseService.calculateTtl(purchase11);
@@ -42,7 +42,7 @@ public class ShoppingPlannerSrv {
         purchaseService.calculateTtl(purchase12);
         purchaseListService.savePurchaseList(purchaseList1);
         System.out.println("Список 1 \n" +  purchaseList1.toString());
-        PurchaseList purchaseList2 = purchaseListService.getPurchaseList(LocalDate.of(2019, 10,11));
+        PurchaseList purchaseList2 = purchaseListService.getPurchaseList(LocalDate.of(2019, 10,1));
         Purchase purchase21 = productService.createPurchase(product1,purchaseList2);
         purchase21.setValue(2);
         purchaseList2.addPurchase(purchase21);

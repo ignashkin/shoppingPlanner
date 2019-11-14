@@ -33,13 +33,19 @@ public class PurchaseService {
         ArrayList<Purchase> purchases =(ArrayList<Purchase>) purchaseRepository.findByProductOrderByDate(product);
         double sumValue = 0;
         long ttl = 0;
-        Purchase firstPurchase;
+        Purchase firstOrLastPurchase;
         if (!purchases.isEmpty()) {
             for (Purchase purchaseCur : purchases ) {
                 sumValue = sumValue + purchaseCur.getValue();
             }
-            firstPurchase = purchases.get(0);
-            ttl = (long) Math.ceil (DAYS.between(firstPurchase.getDate(),purchase.getDate()) / sumValue);
+            firstOrLastPurchase = purchases.get(0);
+            if (firstOrLastPurchase.getDate().isBefore(purchase.getDate())) {
+                ttl = (long) Math.ceil(DAYS.between(firstOrLastPurchase.getDate(), purchase.getDate()) / sumValue);
+            }
+            else {
+                firstOrLastPurchase = purchases.get(purchases.size()-1);
+                ttl = (long) Math.ceil(DAYS.between( purchase.getDate(), firstOrLastPurchase.getDate()) / sumValue);
+            }
         }
         else {
             ttl = Long.MAX_VALUE;
