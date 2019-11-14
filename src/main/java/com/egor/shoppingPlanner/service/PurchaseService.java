@@ -21,34 +21,31 @@ public class PurchaseService {
 
     Purchase getLastPurchase(Product product) {
         ArrayList<Purchase> purchases =(ArrayList<Purchase>) purchaseRepository.findByProductOrderByDate(product);
-        LocalDate lastDate = LocalDate.of(2000,11,12);
-        if (purchases != null) {
-            for (Purchase purchase : purchases) {
-                if (purchase.getDate().isAfter(lastDate)) {
-                    lastDate = purchase.getDate();
-                }
-            }
+        Purchase purchase = null;
+        if (!purchases.isEmpty()) {
+            purchase = purchases.get(purchases.size()-1);
         }
-        return purchaseRepository.findByDate(lastDate);
+        return purchase;
     }
 
-    public long calculateTtl(Product product) {
+    public long calculateTtl(Purchase purchase) {
+        Product product =purchase.getProduct();
         ArrayList<Purchase> purchases =(ArrayList<Purchase>) purchaseRepository.findByProductOrderByDate(product);
-        double interval = 0;
+        double sumValue = 0;
         long period = 0;
-        Purchase currentPurchase;
-        Purchase previousPurchase;
-        if (purchases != null & purchases.size() > 1 ) {
-            for (int i = purchases.size() - 1; i > 0; i--) {
-                currentPurchase = purchases.get(i);
-                previousPurchase = purchases.get(i-1);
-                interval = interval + DAYS.between(previousPurchase.getDate(),currentPurchase.getDate()) / previousPurchase.getValue();
+        Purchase firstPurchase;
+        if (!purchases.isEmpty()) {
+            for (Purchase purchaseCur : purchases ) {
+                sumValue = sumValue + purchaseCur.getValue();
             }
-            period = (long) Math.ceil(interval/(purchases.size()-1));
+            firstPurchase = purchases.get(0);
+            period = (long) Math.ceil (DAYS.between(firstPurchase.getDate(),purchase.getDate()) / sumValue);
         }
-        Purchase lastPurchase = getLastPurchase(product);
-        float purchaseValue = lastPurchase.getValue();
-        lastPurchase.setTtl((long) Math.ceil(period/purchaseValue));
-        return lastPurchase.getTtl();
+        else {
+            period = Long.MAX_VALUE;
+        }
+
+        purchase.setTtl((long)Math.ceil (period*purchase.getValue()));
+        return purchase.getTtl();
     }
 }

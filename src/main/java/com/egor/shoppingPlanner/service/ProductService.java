@@ -1,5 +1,6 @@
 package com.egor.shoppingPlanner.service;
 
+import com.egor.shoppingPlanner.domain.PurchaseList;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class ProductService {
     }
     void calculatePrice(Product product) {
         Purchase purchase = purchaseService.getLastPurchase(product);
-        float price = purchase.getCost()/purchase.getValue();
+        float price = purchase.getCost()*purchase.getValue();
         productRepository.save(product);
     }
 
@@ -41,12 +42,17 @@ public class ProductService {
         ArrayList<Product> productsEnding = new ArrayList<Product>();
 
         for (Product product : products) {
-            purchaseService.calculateTtl(product);
             Purchase lastPurchase = purchaseService.getLastPurchase(product);
-            if (DAYS.between(lastPurchase.getDate(), date)<2) { //think about it
+            if (lastPurchase != null && DAYS.between(lastPurchase.getDate(), date)> lastPurchase.getTtl() - 2) { //think about it
                 productsEnding.add(product);
             }
         }
         return  productsEnding;
+    }
+
+    public Purchase createPurchase(Product product, PurchaseList purchaseList) {
+        Purchase purchase = new Purchase(product, purchaseList);
+        purchase.setDate(purchaseList.getDate());
+        return purchase;
     }
 }

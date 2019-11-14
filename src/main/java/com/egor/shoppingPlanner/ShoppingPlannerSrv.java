@@ -3,8 +3,6 @@ package com.egor.shoppingPlanner;
 import com.egor.shoppingPlanner.domain.Product;
 import com.egor.shoppingPlanner.domain.Purchase;
 import com.egor.shoppingPlanner.domain.PurchaseList;
-import com.egor.shoppingPlanner.repo.ProductRepository;
-import com.egor.shoppingPlanner.repo.PurchaseRepository;
 import com.egor.shoppingPlanner.service.PurchaseListService;
 import com.egor.shoppingPlanner.service.PurchaseService;
 import org.springframework.boot.SpringApplication;
@@ -31,24 +29,32 @@ public class ShoppingPlannerSrv {
         ConfigurableApplicationContext context = SpringApplication.run(ShoppingPlannerSrv.class);
         ProductService productService = context.getBean(ProductService.class);
         PurchaseService purchaseService = context.getBean(PurchaseService.class);
-        //ProductRepository productRepository = context.getBean(ProductRepository.class);
         PurchaseListService purchaseListService =context.getBean(PurchaseListService.class);
 
         Product product1 = productService.addProduct("test1");
         Product product2 = productService.addProduct("test2");
-        Product product3 = productService.addProduct("test3");
-        PurchaseList purchaseList = purchaseListService.getPurchaseList(LocalDate.now());
-        Purchase purchase1 = new Purchase(product1, purchaseList);
-        Purchase purchase2 = new Purchase(product1,purchaseList);
-        purchaseList.addPurchase(purchase1);
-        purchaseList.addPurchase(purchase2);
-        purchase1.setCost(10.5f);
-        /*
-        System.out.println(purchaseService.createPurchase(product1).toString());
-        System.out.println(purchaseService.createPurchase(product2).toString());
-        System.out.println(purchaseService.createPurchase(product3).toString());
-        */
-        purchaseListService.savePurchaseList(purchaseList);
-        System.out.print(purchaseList.toString());
+        PurchaseList purchaseList1 = purchaseListService.getPurchaseList(LocalDate.of(2019, 10,1));
+        Purchase purchase11 = productService.createPurchase(product1, purchaseList1);
+        purchaseList1.addPurchase(purchase11);
+        purchaseService.calculateTtl(purchase11);
+        Purchase purchase12 = productService.createPurchase(product2, purchaseList1);
+        purchaseList1.addPurchase(purchase12);
+        purchaseService.calculateTtl(purchase12);
+        purchaseListService.savePurchaseList(purchaseList1);
+        System.out.println("Список 1 \n" +  purchaseList1.toString());
+        PurchaseList purchaseList2 = purchaseListService.getPurchaseList(LocalDate.of(2019, 10,11));
+        Purchase purchase21 = productService.createPurchase(product1,purchaseList2);
+        purchaseList2.addPurchase(purchase21);
+        purchaseService.calculateTtl(purchase21);
+        Purchase purchase22 = productService.createPurchase(product2, purchaseList2);
+        purchaseList2.addPurchase(purchase22);
+        purchaseService.calculateTtl(purchase22);
+        purchaseListService.savePurchaseList(purchaseList2);
+        System.out.println("Список 2 \n" + purchaseList2.toString());
+        //purchase1.setCost(10.5f);
+        //purchase2.setCost(20f);
+        PurchaseList purchaseListPlain = purchaseListService.planPurchaseList(LocalDate.of(2019,10,21));
+        purchaseListService.savePurchaseList(purchaseListPlain);
+        System.out.print("Список план \n" + purchaseListPlain.toString());
     }
 }

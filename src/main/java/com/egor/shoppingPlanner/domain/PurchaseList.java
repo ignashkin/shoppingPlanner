@@ -50,7 +50,7 @@ public class PurchaseList {
 
     public void addPurchase(Purchase purchase) {
         this.purchases.add(purchase);
-        calculateCost();
+        this.cost = this.cost + purchase.getCost();
     }
 
     public float getCost() {
@@ -59,14 +59,6 @@ public class PurchaseList {
 
     public void setCost(float cost) {
         this.cost = cost;
-    }
-
-    public float calculateCost () {
-        float cost = this.cost;
-        for (Purchase purchase : this.purchases) {
-            this.cost = this.cost + purchase.getCost();
-        }
-        return cost;
     }
 
     @Override

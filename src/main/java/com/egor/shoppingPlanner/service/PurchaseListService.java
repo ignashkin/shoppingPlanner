@@ -22,6 +22,9 @@ public class PurchaseListService {
     @Autowired
     ProductService productService;
 
+    @Autowired
+    PurchaseService purchaseService;
+
     public PurchaseList getPurchaseList(LocalDate date) {
         PurchaseList purchaseList = purchaseListRepository.findByDate(date);
         if (purchaseList == null) {
@@ -37,7 +40,7 @@ public class PurchaseListService {
         products = productService.productsEnding(date);
         PurchaseList purchaseList = getPurchaseList(date);
         for (Product product : products) {
-            purchases.add(new Purchase(product,purchaseList));
+            purchases.add(productService.createPurchase(product,purchaseList));
         }
         purchaseList.setPurchases(purchases);
         return purchaseList;
