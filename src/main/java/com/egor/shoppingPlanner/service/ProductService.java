@@ -21,9 +21,9 @@ public class ProductService {
     @Autowired
     PurchaseService purchaseService;
 
-    public  ArrayList<Product> getAllProducts() {
+    public ArrayList<Product> getAllProducts() {
         ArrayList<Product> products = (ArrayList<Product>) productRepository.findAll();
-    return products;
+        return products;
     }
 
     public Product addProduct(String name) {
@@ -31,9 +31,10 @@ public class ProductService {
         productRepository.save(product);
         return product;
     }
+
     void calculatePrice(Product product) {
         Purchase purchase = purchaseService.getLastPurchase(product);
-        float price = purchase.getCost()*purchase.getValue();
+        float price = purchase.getCost() * purchase.getValue();
         productRepository.save(product);
     }
 
@@ -43,11 +44,11 @@ public class ProductService {
 
         for (Product product : products) {
             Purchase lastPurchase = purchaseService.getLastPurchase(product);
-            if (lastPurchase != null && DAYS.between(lastPurchase.getDate(), date)> lastPurchase.getTtl()*lastPurchase.getValue() - 2) { //think about it
+            if (lastPurchase != null && DAYS.between(lastPurchase.getDate(), date) > lastPurchase.getTtl() * lastPurchase.getValue() - 2) { //think about it
                 productsEnding.add(product);
             }
         }
-        return  productsEnding;
+        return productsEnding;
     }
 
     public Purchase createPurchase(Product product, PurchaseList purchaseList) {

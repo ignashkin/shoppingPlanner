@@ -17,6 +17,7 @@ public class Product {
 
     public Product() {
     }
+
     public Product(String name) {
         this.name = name;
     }

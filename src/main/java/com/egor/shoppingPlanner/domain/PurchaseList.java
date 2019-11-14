@@ -11,10 +11,10 @@ public class PurchaseList {
     private long id;
     private LocalDate date;
     private float cost;
-    @OneToMany(fetch = FetchType.EAGER,  cascade = CascadeType.ALL, mappedBy = "purchaseList") // mappedBy ???
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "purchaseList") // mappedBy ???
     private Set<Purchase> purchases;
 
-    protected  PurchaseList() {
+    protected PurchaseList() {
 
     }
 
@@ -63,8 +63,8 @@ public class PurchaseList {
 
     @Override
     public String toString() {
-        String purchaseList = "id: " + Long.toString(this.id) + "  date: " + this.date.toString() +"\n";
-        for (Purchase purchase :this.purchases) {
+        String purchaseList = "id: " + Long.toString(this.id) + "  date: " + this.date.toString() + "\n";
+        for (Purchase purchase : this.purchases) {
             purchaseList = purchaseList + purchase.toString() + "\n";
         }
         purchaseList = purchaseList + "Cost: " + Float.toString(this.cost) + "\n";

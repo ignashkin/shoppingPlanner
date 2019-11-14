@@ -20,34 +20,32 @@ public class PurchaseService {
     PurchaseListService purchaseListService;
 
     Purchase getLastPurchase(Product product) {
-        ArrayList<Purchase> purchases =(ArrayList<Purchase>) purchaseRepository.findByProductOrderByDate(product);
+        ArrayList<Purchase> purchases = (ArrayList<Purchase>) purchaseRepository.findByProductOrderByDate(product);
         Purchase purchase = null;
         if (!purchases.isEmpty()) {
-            purchase = purchases.get(purchases.size()-1);
+            purchase = purchases.get(purchases.size() - 1);
         }
         return purchase;
     }
 
     public long calculateTtl(Purchase purchase) {
-        Product product =purchase.getProduct();
-        ArrayList<Purchase> purchases =(ArrayList<Purchase>) purchaseRepository.findByProductOrderByDate(product);
+        Product product = purchase.getProduct();
+        ArrayList<Purchase> purchases = (ArrayList<Purchase>) purchaseRepository.findByProductOrderByDate(product);
         double sumValue = 0;
         long ttl = 0;
         Purchase firstOrLastPurchase;
         if (!purchases.isEmpty()) {
-            for (Purchase purchaseCur : purchases ) {
+            for (Purchase purchaseCur : purchases) {
                 sumValue = sumValue + purchaseCur.getValue();
             }
             firstOrLastPurchase = purchases.get(0);
             if (firstOrLastPurchase.getDate().isBefore(purchase.getDate())) {
                 ttl = (long) Math.ceil(DAYS.between(firstOrLastPurchase.getDate(), purchase.getDate()) / sumValue);
+            } else {
+                firstOrLastPurchase = purchases.get(purchases.size() - 1);
+                ttl = (long) Math.ceil(DAYS.between(purchase.getDate(), firstOrLastPurchase.getDate()) / sumValue);
             }
-            else {
-                firstOrLastPurchase = purchases.get(purchases.size()-1);
-                ttl = (long) Math.ceil(DAYS.between( purchase.getDate(), firstOrLastPurchase.getDate()) / sumValue);
-            }
-        }
-        else {
+        } else {
             ttl = Long.MAX_VALUE;
         }
         purchase.setTtl(ttl);

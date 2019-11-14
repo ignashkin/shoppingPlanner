@@ -1,5 +1,6 @@
 
 package com.egor.shoppingPlanner.domain;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 

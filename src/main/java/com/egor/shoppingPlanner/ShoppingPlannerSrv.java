@@ -29,11 +29,11 @@ public class ShoppingPlannerSrv {
         ConfigurableApplicationContext context = SpringApplication.run(ShoppingPlannerSrv.class);
         ProductService productService = context.getBean(ProductService.class);
         PurchaseService purchaseService = context.getBean(PurchaseService.class);
-        PurchaseListService purchaseListService =context.getBean(PurchaseListService.class);
+        PurchaseListService purchaseListService = context.getBean(PurchaseListService.class);
 
         Product product1 = productService.addProduct("test1");
         Product product2 = productService.addProduct("test2");
-        PurchaseList purchaseList1 = purchaseListService.getPurchaseList(LocalDate.of(2019, 10,11));
+        PurchaseList purchaseList1 = purchaseListService.getPurchaseList(LocalDate.of(2019, 10, 11));
         Purchase purchase11 = productService.createPurchase(product1, purchaseList1);
         purchaseList1.addPurchase(purchase11);
         purchaseService.calculateTtl(purchase11);
@@ -41,9 +41,9 @@ public class ShoppingPlannerSrv {
         purchaseList1.addPurchase(purchase12);
         purchaseService.calculateTtl(purchase12);
         purchaseListService.savePurchaseList(purchaseList1);
-        System.out.println("Список 1 \n" +  purchaseList1.toString());
-        PurchaseList purchaseList2 = purchaseListService.getPurchaseList(LocalDate.of(2019, 10,1));
-        Purchase purchase21 = productService.createPurchase(product1,purchaseList2);
+        System.out.println("Список 1 \n" + purchaseList1.toString());
+        PurchaseList purchaseList2 = purchaseListService.getPurchaseList(LocalDate.of(2019, 10, 1));
+        Purchase purchase21 = productService.createPurchase(product1, purchaseList2);
         purchase21.setValue(2);
         purchaseList2.addPurchase(purchase21);
         purchaseService.calculateTtl(purchase21);
@@ -55,7 +55,7 @@ public class ShoppingPlannerSrv {
         System.out.println("Список 2 \n" + purchaseList2.toString());
         //purchase1.setCost(10.5f);
         //purchase2.setCost(20f);
-        PurchaseList purchaseListPlain = purchaseListService.planPurchaseList(LocalDate.of(2019,10,21));
+        PurchaseList purchaseListPlain = purchaseListService.planPurchaseList(LocalDate.of(2019, 10, 21));
         purchaseListService.savePurchaseList(purchaseListPlain);
         System.out.print("Список план \n" + purchaseListPlain.toString());
     }

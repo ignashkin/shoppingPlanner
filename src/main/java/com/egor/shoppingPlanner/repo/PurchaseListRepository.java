@@ -8,5 +8,5 @@ import java.time.LocalDate;
 
 @Repository
 public interface PurchaseListRepository extends CrudRepository<PurchaseList, Long> {
-    PurchaseList  findByDate(LocalDate date);
+    PurchaseList findByDate(LocalDate date);
 }

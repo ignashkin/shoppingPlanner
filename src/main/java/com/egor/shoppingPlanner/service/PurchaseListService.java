@@ -40,7 +40,7 @@ public class PurchaseListService {
         products = productService.productsEnding(date);
         PurchaseList purchaseList = getPurchaseList(date);
         for (Product product : products) {
-            Purchase purchase = productService.createPurchase(product,purchaseList);
+            Purchase purchase = productService.createPurchase(product, purchaseList);
             purchaseService.calculateTtl(purchase);
             purchases.add(purchase);
         }

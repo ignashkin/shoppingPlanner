@@ -8,28 +8,28 @@ import javax.persistence.*;
 public class Purchase {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private  long id;
+    private long id;
     private float cost;
     private float value = 1;
     private String shop;
     private LocalDate date;
-    private  long ttl;
+    private long ttl;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
     private Product product;
 
-   @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     //@JoinColumn(name = "purchaseList_id")
     private PurchaseList purchaseList;
 
-   protected Purchase() {}
+    protected Purchase() {
+    }
 
-   public Purchase (Product product, PurchaseList purchaseList){
-       this.product = product;
-       this.purchaseList = purchaseList;
+    public Purchase(Product product, PurchaseList purchaseList) {
+        this.product = product;
+        this.purchaseList = purchaseList;
 
-   }
-
+    }
 
 
     public long getId() {
@@ -54,7 +54,7 @@ public class Purchase {
 
     public void setCost(float cost) {
         this.cost = cost;
-        this.purchaseList.setCost(this.purchaseList.getCost()+this.cost);
+        this.purchaseList.setCost(this.purchaseList.getCost() + this.cost);
     }
 
     public float getValue() {
@@ -99,7 +99,7 @@ public class Purchase {
 
     @Override
     public String toString() {
-        String purchase = "Product: " + this.product + "  value: " + Float.toString(this.value) + "  cost: "+ Float.toString(this.cost) + "  date: " + this.date + "  TTL: " + this.ttl;
+        String purchase = "Product: " + this.product + "  value: " + Float.toString(this.value) + "  cost: " + Float.toString(this.cost) + "  date: " + this.date + "  TTL: " + this.ttl;
         return purchase;
     }
 }
