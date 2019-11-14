@@ -43,7 +43,7 @@ public class ProductService {
 
         for (Product product : products) {
             Purchase lastPurchase = purchaseService.getLastPurchase(product);
-            if (lastPurchase != null && DAYS.between(lastPurchase.getDate(), date)> lastPurchase.getTtl() - 2) { //think about it
+            if (lastPurchase != null && DAYS.between(lastPurchase.getDate(), date)> lastPurchase.getTtl()*lastPurchase.getValue() - 2) { //think about it
                 productsEnding.add(product);
             }
         }

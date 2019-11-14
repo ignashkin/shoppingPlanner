@@ -44,9 +44,11 @@ public class ShoppingPlannerSrv {
         System.out.println("Список 1 \n" +  purchaseList1.toString());
         PurchaseList purchaseList2 = purchaseListService.getPurchaseList(LocalDate.of(2019, 10,11));
         Purchase purchase21 = productService.createPurchase(product1,purchaseList2);
+        purchase21.setValue(2);
         purchaseList2.addPurchase(purchase21);
         purchaseService.calculateTtl(purchase21);
         Purchase purchase22 = productService.createPurchase(product2, purchaseList2);
+        purchase22.setValue(2);
         purchaseList2.addPurchase(purchase22);
         purchaseService.calculateTtl(purchase22);
         purchaseListService.savePurchaseList(purchaseList2);
