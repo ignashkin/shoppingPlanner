@@ -54,6 +54,7 @@ public class ProductService {
     public Purchase createPurchase(Product product, PurchaseList purchaseList) {
         Purchase purchase = new Purchase(product, purchaseList);
         purchase.setDate(purchaseList.getDate());
+        purchaseList.addPurchase(purchase);
         return purchase;
     }
 }

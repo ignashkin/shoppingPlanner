@@ -18,16 +18,15 @@ public class Purchase {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    //@ManyToOne(fetch = FetchType.EAGER)
     //@JoinColumn(name = "purchaseList_id")
-    private PurchaseList purchaseList;
+    //private PurchaseList purchaseList;
 
     protected Purchase() {
     }
 
     public Purchase(Product product, PurchaseList purchaseList) {
         this.product = product;
-        this.purchaseList = purchaseList;
 
     }
 
@@ -36,13 +35,6 @@ public class Purchase {
         return id;
     }
 
-    public PurchaseList getPurchaseList() {
-        return purchaseList;
-    }
-
-    public void setPurchaseList(PurchaseList purchaseList) {
-        this.purchaseList = purchaseList;
-    }
 
     public void setId(long id) {
         this.id = id;
@@ -54,7 +46,6 @@ public class Purchase {
 
     public void setCost(float cost) {
         this.cost = cost;
-        this.purchaseList.setCost(this.purchaseList.getCost() + this.cost);
     }
 
     public float getValue() {
