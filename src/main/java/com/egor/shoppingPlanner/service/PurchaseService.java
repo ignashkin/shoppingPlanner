@@ -1,6 +1,7 @@
 package com.egor.shoppingPlanner.service;
 
 import com.egor.shoppingPlanner.domain.PurchaseList;
+import com.egor.shoppingPlanner.repo.PurchaseListRepository;
 import org.springframework.stereotype.Service;
 import com.egor.shoppingPlanner.domain.Product;
 import com.egor.shoppingPlanner.domain.Purchase;
@@ -9,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -18,32 +22,42 @@ public class PurchaseService {
     PurchaseRepository purchaseRepository;
     @Autowired
     PurchaseListService purchaseListService;
+    @Autowired
+    PurchaseListRepository purchaseListRepository;
 
-    Purchase getLastPurchase(Product product) {
-        ArrayList<Purchase> purchases = (ArrayList<Purchase>) purchaseRepository.findByProductOrderByDate(product);
-        Purchase purchase = null;
-        if (!purchases.isEmpty()) {
-            purchase = purchases.get(purchases.size() - 1);
+    public Purchase getLastPurchase(Product product) {
+        ArrayList<PurchaseList> purchaseLists = purchaseListService.findPurchaseLists(product);
+        Purchase lastPurchase = null;
+        ArrayList<Purchase> purchases = (ArrayList<Purchase>) purchaseRepository.findByProduct(product);
+        if (!purchaseLists.isEmpty()) {
+          PurchaseList purchaseList   = purchaseLists.get(purchaseLists.size() - 1);
+          for (Purchase purchase : purchases) {
+              if (purchase.getPurchaseList().equals(purchaseList)) {
+                  lastPurchase = purchase;
+                  break;
+              }
+          }
         }
-        return purchase;
+        return lastPurchase;
     }
 
     public long calculateTtl(Purchase purchase) {
         Product product = purchase.getProduct();
-        ArrayList<Purchase> purchases = (ArrayList<Purchase>) purchaseRepository.findByProductOrderByDate(product);
+        ArrayList<Purchase> purchases = (ArrayList<Purchase>) purchaseRepository.findByProduct(product);
+        List<PurchaseList> purchaseLists = purchaseListService.findPurchaseLists(product);
         double sumValue = 0;
         long ttl = 0;
-        Purchase firstOrLastPurchase;
+
         if (!purchases.isEmpty()) {
             for (Purchase purchaseCur : purchases) {
                 sumValue = sumValue + purchaseCur.getValue();
             }
-            firstOrLastPurchase = purchases.get(0);
-            if (firstOrLastPurchase.getDate().isBefore(purchase.getDate())) {
-                ttl = (long) Math.ceil(DAYS.between(firstOrLastPurchase.getDate(), purchase.getDate()) / sumValue);
+            LocalDate firstPurchaseDate = purchaseLists.get(0).getDate();
+            if (firstPurchaseDate.isBefore(purchase.getPurchaseList().getDate())) {
+                ttl = (long) Math.ceil(DAYS.between(firstPurchaseDate, purchase.getPurchaseList().getDate()) / sumValue);
             } else {
-                firstOrLastPurchase = purchases.get(purchases.size() - 1);
-                ttl = (long) Math.ceil(DAYS.between(purchase.getDate(), firstOrLastPurchase.getDate()) / sumValue);
+                LocalDate lastPurchaseDate = purchaseLists.get(purchaseLists.size() - 1).getDate();
+                ttl = (long) Math.ceil(DAYS.between(purchase.getPurchaseList().getDate(), lastPurchaseDate) / sumValue);
             }
         } else {
             ttl = Long.MAX_VALUE;

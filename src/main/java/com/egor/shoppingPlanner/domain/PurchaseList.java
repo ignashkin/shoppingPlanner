@@ -2,7 +2,10 @@ package com.egor.shoppingPlanner.domain;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.Set;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @Entity
 public class PurchaseList {
@@ -71,3 +74,4 @@ public class PurchaseList {
         return purchaseList;
     }
 }
+

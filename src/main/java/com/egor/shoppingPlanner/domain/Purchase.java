@@ -12,21 +12,21 @@ public class Purchase {
     private float cost;
     private float value = 1;
     private String shop;
-    private LocalDate date;
     private long ttl;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
     private Product product;
 
-    //@ManyToOne(fetch = FetchType.EAGER)
-    //@JoinColumn(name = "purchaseList_id")
-    //private PurchaseList purchaseList;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "purchaseList_id")
+    private PurchaseList purchaseList;
 
     protected Purchase() {
     }
 
     public Purchase(Product product, PurchaseList purchaseList) {
         this.product = product;
+        this.purchaseList = purchaseList;
 
     }
 
@@ -35,6 +35,13 @@ public class Purchase {
         return id;
     }
 
+    public PurchaseList getPurchaseList() {
+        return purchaseList;
+    }
+
+    public void setPurchaseList(PurchaseList purchaseList) {
+        this.purchaseList = purchaseList;
+    }
 
     public void setId(long id) {
         this.id = id;
@@ -64,14 +71,6 @@ public class Purchase {
         this.shop = shop;
     }
 
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
     public long getTtl() {
         return ttl;
     }
@@ -90,7 +89,7 @@ public class Purchase {
 
     @Override
     public String toString() {
-        String purchase = "Product: " + this.product + "  value: " + Float.toString(this.value) + "  cost: " + Float.toString(this.cost) + "  date: " + this.date + "  TTL: " + this.ttl;
+        String purchase = "Product: " + this.product + "  value: " + Float.toString(this.value) + "  cost: " + Float.toString(this.cost) + "  TTL: " + this.ttl;
         return purchase;
     }
 }

@@ -10,8 +10,11 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
 public class PurchaseListService {
@@ -53,5 +56,15 @@ public class PurchaseListService {
         for (Purchase purchase : purchaseList.getPurchases()) {
             purchaseRepository.save(purchase);
         }
+    }
+
+    public ArrayList<PurchaseList> findPurchaseLists(Product product) {
+        ArrayList<PurchaseList> purchaseLists = new ArrayList<PurchaseList>();
+        ArrayList<Purchase> purchases = (ArrayList<Purchase>) purchaseRepository.findByProduct(product);
+        for (Purchase purchase : purchases) {
+            purchaseLists.add(purchase.getPurchaseList());
+        }
+        purchaseLists.sort(Comparator.comparing(PurchaseList::getDate));
+        return purchaseLists;
     }
 }

@@ -9,7 +9,5 @@ import java.time.LocalDate;
 
 @Repository
 public interface PurchaseRepository extends CrudRepository<Purchase, Long> {
-    Iterable<Purchase> findByProductOrderByDate(Product product);
-
-    Purchase findByDate(LocalDate date);
+    Iterable<Purchase> findByProduct(Product product);
 }
